@@ -1,9 +1,12 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include "conf.h"
-int main(int argc, char** argv)
-{
+int main(void){
 	int sd, len;
 	struct sockaddr_in addr;
 	char buf[BUFSIZE+1];
@@ -13,6 +16,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
+	memset(&addr, 0, sizeof(addr));
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(PORT);
 	inet_pton(AF_INET, SERVERIP, &addr.sin_addr);

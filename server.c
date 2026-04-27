@@ -1,10 +1,12 @@
 ﻿#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include "conf.h"
 
-int main(int argc, char** argv) {
+int main(void) {
 	int sd, sd1, i, len;
 	struct sockaddr_in addr;
 
@@ -25,6 +27,8 @@ int main(int argc, char** argv) {
 	addr.sin_port = htons(PORT);
 	addr.sin_addr.s_addr = INADDR_ANY;
 
+	int opt=1;
+	setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 	if(bind(sd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
 		perror("cannot bind");
 		return -1;
