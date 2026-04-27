@@ -13,6 +13,7 @@ int main(int argc, char** argv) {
 
 	char buf[BUFSIZE+1];
 
+	memset(&addr, 0, sizeof(addr));
 	memset(buf, 0, sizeof(buf));
 
 	if((sd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -39,10 +40,11 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	if((len=recv(sd1, buf, sizeof(buf), 0)) < 0) {
+	if((len=recv(sd1, buf, BUFSIZE, 0)) < 0) {
 		perror("cannot recv");
 		return -1;
 	}
+	buf[len]='\0';
 	printf("<-- %s\n", buf);
 
 	for(i=0; i<len/2; i++){

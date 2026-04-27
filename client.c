@@ -15,22 +15,29 @@ int main(int argc, char** argv)
 
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(PORT);
-	addr.sin_addr.s_addr = inet_addr(SERVERIP);
+	inet_pton(AF_INET, SERVERIP, &addr.sin_addr);
 
-	connect(sd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
+	if( connect(sd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0 ){
+		perror("connect");
+		return -1;
+	}
 
-	scanf(SCANFTXT,buf);
-    printf("--> %s\n", buf);
+	if( scanf(SCANFTXT,buf) != 1 ){
+		fprintf(stderr, "input error\n");
+		return -1;
+	}
+	printf("--> %s\n", buf);
 	len = strnlen(buf, 16);
 	if(send(sd, buf, len, 0) < 0) {
 		perror("cannot send()");
-	    return -1;
+		return -1;
 	}
-	if((len=recv(sd, buf, sizeof(buf), 0)) < 0) {
-	    perror("cannot recv()");
-	    return -1;
+	if((len=recv(sd, buf, BUFSIZE, 0)) < 0) {
+		perror("cannot recv()");
+		return -1;
 	}
-    printf("<-- %s\n", buf);
+	buf[len]='\0';
+	printf("<-- %s\n", buf);
 
 	close(sd);
 
