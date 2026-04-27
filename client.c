@@ -31,7 +31,7 @@ int main(void){
 		return -1;
 	}
 	printf("--> %s\n", buf);
-	len = strnlen(buf, 16);
+	len = strnlen(buf, BUFSIZE);
 	if(send(sd, buf, len, 0) < 0) {
 		perror("cannot send()");
 		return -1;
